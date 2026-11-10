@@ -123,7 +123,7 @@ uv run pytest -m integration -s
 $env:RECAP_MCP_INTEGRATION_GUI = "1"        # opcional: abre a interface do ReCap
 ```
 
-Os testes de integração geram nuvens sintéticas pequenas em pastas temporárias novas (com espaços e acentos no caminho) e nunca usam dados reais. O CI (GitHub Actions, Windows, Python 3.11 a 3.13) roda apenas os testes que não dependem do ReCap.
+Os testes de integração geram nuvens sintéticas pequenas em pastas temporárias novas (com espaços e acentos no caminho) e nunca usam dados reais. Um workflow de CI para o GitHub Actions (Windows, Python 3.11 a 3.13, só os testes que não dependem do ReCap) está descrito em [docs/ci.md](docs/ci.md), pronto para ser adicionado em `.github/workflows/`.
 
 Variáveis de ambiente:
 
