@@ -111,7 +111,7 @@ def test_import_pts_creates_verified_project(manager, caps, license_ok, work):
     info = projects.read_project(st["output"]["expected_rcp"])
     assert info["project_bounds"]["max"][:2] == pytest.approx([9.9, 9.9])
     scans = projects.list_scans(st["output"]["expected_rcp"])
-    # o DeCap grava Path com perda de acentos; a resolução pela pasta Support precisa funcionar
+    # todos os .rcs referenciados precisam ser encontrados (caminho com acentos)
     assert scans["missing_rcs_count"] == 0
     print("resolução do .rcs:", scans["scans"][0]["rcs"]["resolved_by"],
           "path com perda:", scans["scans"][0]["rcs"]["manifest_path_lossy"])

@@ -163,7 +163,7 @@ def test_list_scans_with_missing_rcs(unicode_dir):
 
 
 def test_list_scans_lossy_path_falls_back_to_support(tmp_path):
-    """DeCap 27 grava U+FFFD no lugar de letras acentuadas; o .rcs é achado na pasta Support."""
+    """Caminho gravado corrompido (U+FFFD) ou inválido: o .rcs é achado na pasta Support."""
     s = ScanSpec("nuvem", num_points=5, manifest_path="C:/sa\ufffdda/P Support\\nuvem.rcs",
                  raw_scan_path="C:\\entrada \ufffd\ufffdo\\nuvem.pts")
     write_rcs(tmp_path / "P Support" / "nuvem.rcs", 5, s.guid)

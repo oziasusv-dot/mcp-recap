@@ -385,8 +385,9 @@ def _resolve_rcs(rcp: Path, manifest_path: str | None, relative: str | None) -> 
     """Resolve o .rcs de um scan sem confiar cegamente no caminho absoluto gravado.
 
     Ordem: RelativePath (relativo ao .rcp) → Path absoluto → ``<projeto> Support\\<arquivo>``.
-    O DeCap 27 grava ``Path`` com perda de caracteres não ASCII (U+FFFD); nesse caso
-    o caminho absoluto é inutilizável e a pasta Support é usada.
+    ``Path`` é absoluto e deixa de valer quando o projeto é movido ou copiado para outra
+    pasta ou máquina; nesse caso a pasta Support ao lado do .rcp é usada. Se o caminho
+    gravado contiver U+FFFD (texto corrompido por outra ferramenta), ele não é usado.
     """
     lossy = bool(manifest_path and LOSSY_CHAR in manifest_path)
     tried: list[str] = []

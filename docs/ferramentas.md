@@ -76,7 +76,9 @@ Exemplo:
 Para cada scan: `id`, `name`, `type` (`UNSTRUCTURED`/`STRUCTURED`), `num_points`, presença de RGB/intensidade/normais, `translation`, `registration` e:
 
 * `rcs.resolved_path`, `rcs.resolved_by` (`RelativePath`, `Path` ou `pasta Support`), `rcs.exists`, `rcs.manifest_path_lossy` e `rcs.header_check`;
-* `source_scan` (arquivo bruto de origem): `exists` é `null` quando o caminho gravado perdeu caracteres.
+* `source_scan` (arquivo bruto de origem): `exists` é `null` quando o caminho gravado está corrompido (contém U+FFFD).
+
+Um projeto movido para outra pasta continua legível: o `.rcs` é procurado na pasta `<projeto> Support` ao lado do `.rcp`.
 
 `missing_rcs_count` resume os `.rcs` ausentes.
 
@@ -134,7 +136,7 @@ Estados: `queued`, `running`, `succeeded`, `failed`, `cancelled`, `interrupted`.
 
 ## list_jobs
 
-`status` (filtro opcional) e `limit` (1 a 500, padrão 50). Inclui jobs de execuções anteriores do servidor; `controlled_by_this_server` indica se o processo pertence a esta instância.
+`status` (filtro opcional) e `limit` (1 a 500, padrão 50). Inclui jobs de execuções anteriores do servidor; `controlled_by_this_server` é `true` apenas enquanto o job está ativo e o processo pertence a esta instância (jobs encerrados mostram `false`).
 
 ## cancel_job
 

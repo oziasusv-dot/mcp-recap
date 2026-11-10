@@ -35,7 +35,7 @@ Outras versões do ReCap devem funcionar enquanto o DeCap mantiver `--importWith
 | `--currentCoordinateSystem UTM84-23S --targetCoordinateSystem SIRGAS2000.UTM-23S` com coordenadas locais pequenas falhou a conversão (`[P][1 Failed]`, projeto sem scans) | Detectado como falha; conversões exigem coordenadas coerentes com o sistema de origem |
 | O arquivo de `--controlFile` é lido na página de código ANSI (UTF-8 com acentos falha) | Arquivo gravado em ANSI; caminhos fora do ANSI fazem a importação longa ser recusada com orientação |
 | Caminhos com caracteres fora do ANSI (ex.: chinês) funcionam na linha de comando | Argumentos passados diretamente sempre que possível |
-| O atributo `Path` do `.rcp` perde caracteres acentuados (grava U+FFFD) | `list_scans` resolve o `.rcs` pela pasta `<projeto> Support` e sinaliza `manifest_path_lossy` |
+| O `.rcp` grava o caminho absoluto de cada `.rcs` (`Path`), em UTF-8 correto, e deixa `RelativePath` vazio | Se o projeto for movido, `list_scans` acha o `.rcs` pela pasta `<projeto> Support` (`resolved_by: "pasta Support"`) |
 | O DeCap escreve no console em ANSI | Logs decodificados como UTF-8 ou, se falhar, ANSI |
 
 ## Comportamento do ReCap (interface)
