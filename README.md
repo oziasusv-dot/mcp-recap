@@ -4,6 +4,18 @@ Servidor MCP próprio para o **Autodesk ReCap Pro no Windows**. Permite que agen
 
 Testado com **ReCap Pro 2027 (27.0.1.242)** e DeCap 27.0.1.242 no Windows 11, Python 3.11 a 3.13 e SDK oficial `mcp` 1.30.
 
+## Instalar em qualquer PC (Claude Desktop)
+
+No PC com o ReCap Pro instalado e ativado, abra a aba **Code** do Claude Desktop e envie:
+
+```
+Instale o servidor MCP deste repositório no meu Claude Desktop seguindo o arquivo claude/setup-recap-mcp.md: https://github.com/rafaelcruzmartins/mcp-recap
+```
+
+O Claude Code segue o passo a passo do [`setup-recap-mcp.md`](claude/setup-recap-mcp.md): instala o `uv` se faltar, baixa o código em `%LOCALAPPDATA%\mcp-recap\src`, prepara o ambiente, roda o diagnóstico e registra o servidor `recap` no Claude Desktop e no Claude Code, com backup e sem tocar nos outros servidores. No fim, feche o Claude Desktop pela bandeja do sistema (botão direito > Sair), abra de novo e peça num chat novo: *"verifique a instalação do ReCap, incluindo a licença"*.
+
+Para atualizar, envie a mesma mensagem: o passo a passo faz `git pull` quando o código já existe.
+
 ## Escolha o agente
 
 | Agente | Tutorial |
@@ -56,7 +68,7 @@ uv run mcp-recap-configurar --client claude-desktop --dry-run
 uv run mcp-recap-configurar --client claude-desktop
 ```
 
-O gerador preserva os outros servidores MCP, faz backup `.bak-AAAAMMDD-HHMMSS` antes de alterar um arquivo existente e não toca em arquivos com JSON/TOML inválido. Clientes aceitos: `claude-desktop`, `antigravity`, `codex` e `claude-code` (este só mostra o comando `claude mcp add`; com `--run` ele executa).
+Para o Claude Desktop, o gerador procura `%APPDATA%\Claude\claude_desktop_config.json`, `%LOCALAPPDATA%\Claude-Data\<conta>\claude_desktop_config.json` (versões recentes do app) e a variante da Microsoft Store, e atualiza os que existirem. Ele preserva os outros servidores MCP, faz backup `.bak-AAAAMMDD-HHMMSS` antes de alterar um arquivo existente e não toca em arquivos com JSON/TOML inválido. Clientes aceitos: `claude-desktop`, `antigravity`, `codex` e `claude-code` (este só mostra o comando `claude mcp add`; com `--run` ele executa).
 
 Comando para iniciar o servidor (STDIO), usado pelos clientes:
 

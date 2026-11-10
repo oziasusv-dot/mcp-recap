@@ -37,6 +37,8 @@
 | Job `interrupted` | O servidor foi reiniciado durante a importação. Confira os arquivos no destino; repita em pasta nova. |
 | `limit_exceeded` ao importar muitos arquivos com acentos fora do ANSI | Divida a importação em lotes menores ou use caminhos mais curtos. |
 | `open_project_in_recap` com `load_confirmed: null` | O ReCap ainda está iniciando (pode levar 1 a 2 min). Repita com `wait_for_load_seconds` maior ou confira a janela. |
+| `recap_already_running` ao abrir projeto | Abra o projeto pelo ReCap que já está aberto, ou feche-o e repita. |
+| `recap` não aparece no chat do Claude Desktop | Rode `uv run mcp-recap-configurar --client claude-desktop --dry-run` e confira o `path`: deve ser o arquivo que o app usa (`%APPDATA%\Claude\` ou `%LOCALAPPDATA%\Claude-Data\<conta>\`). Depois saia do app pela bandeja e abra de novo. |
 | Ferramentas não aparecem no cliente | Reinicie o cliente (no Claude Desktop, saia pela bandeja do sistema). Confira se o caminho do `uv.exe` e do repositório na configuração estão corretos. |
 | Erro de timeout ao iniciar no Codex | Na primeira execução o `uv` instala dependências. Rode `uv sync` antes; o gerador já define `startup_timeout_sec = 60`. |
 | Qualquer outro | Rode o diagnóstico e abra uma issue com o JSON (remova caminhos sigilosos). |

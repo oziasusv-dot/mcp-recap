@@ -33,7 +33,7 @@ claude mcp add --scope user recap -- $uv --directory $repo run mcp-recap
 claude mcp list
 ```
 
-Para o chat do Claude Desktop, edite `%APPDATA%\Claude\claude_desktop_config.json` (instalação pela Microsoft Store: `%LOCALAPPDATA%\Packages\Claude_*\LocalCache\Roaming\Claude\claude_desktop_config.json`) acrescentando dentro de `mcpServers`:
+Para o chat do Claude Desktop, edite `%APPDATA%\Claude\claude_desktop_config.json` (versões recentes do app: `%LOCALAPPDATA%\Claude-Data\<conta>\claude_desktop_config.json`; instalação pela Microsoft Store: `%LOCALAPPDATA%\Packages\Claude_*\LocalCache\Roaming\Claude\claude_desktop_config.json`) acrescentando dentro de `mcpServers`:
 
 ```json
 "recap": {

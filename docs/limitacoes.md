@@ -43,6 +43,7 @@ Outras versões do ReCap devem funcionar enquanto o DeCap mantiver `--importWith
 * `ReCap.exe "<projeto.rcp>"` abre o projeto; a inicialização levou cerca de 100 s.
 * Iniciado com a flag `DETACHED_PROCESS`, o ReCap encerra antes de criar a janela; a flag não é usada.
 * O carregamento é confirmado pelo `AutodeskReCap.log` (`[POINTCLOUD] Project loading success`).
+* Com outra instância do ReCap aberta, uma nova instância iniciada com o arquivo não carregou o projeto em 240 s. Por isso `open_project_in_recap` recusa por padrão quando o ReCap já está aberto.
 
 ## Decisões de projeto
 

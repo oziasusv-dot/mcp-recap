@@ -22,6 +22,7 @@ Erros de domínio voltam como resultado MCP com `isError: true` e o mesmo corpo 
 | `decap_not_found`, `recap_not_found` | ReCap/DeCap não encontrados |
 | `job_not_found`, `job_not_cancellable`, `too_many_jobs` | Gerenciamento de jobs |
 | `launch_failed` | O Windows não conseguiu iniciar o processo |
+| `recap_already_running` | `open_project_in_recap` com o ReCap já aberto |
 | `internal_error` | Falha inesperada (registrada em `server.log`) |
 
 Erros de **esquema** (parâmetro obrigatório ausente, tipo errado) são rejeitados pelo próprio SDK MCP antes de chegar ao servidor e voltam com a mensagem padrão do SDK.
@@ -145,5 +146,8 @@ Encerra (TerminateProcess) **somente** o PID iniciado por esta instância do ser
 |---|---|---|---|
 | `path` | texto | obrigatório | `.rcp` existente e válido |
 | `wait_for_load_seconds` | 0 a 300 | 0 | Aguarda o registro `Project loading success` no `AutodeskReCap.log` |
+| `allow_second_instance` | bool | `false` | Inicia o ReCap mesmo com outra instância aberta |
+
+Se o ReCap já estiver aberto, a ferramenta recusa com `recap_already_running` (e lista os PIDs): nos testes, uma segunda instância não carregou o projeto em 240 s. Abra o projeto pelo ReCap aberto ou feche-o antes.
 
 Executa `ReCap.exe "<projeto>"`, o mesmo formato da associação de arquivos do Windows. Com `wait_for_load_seconds > 0`, `load_confirmed` vale `true`/`false` conforme o log do ReCap; com 0, `null`. A inicialização do ReCap levou cerca de 100 s nos testes, então use 150 ou mais para confirmar.
