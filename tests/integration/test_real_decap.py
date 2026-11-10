@@ -250,6 +250,8 @@ def test_open_project_in_recap_gui(manager, caps, license_ok, work, inst):
 
     from recap_mcp import recap_app
 
+    if recap_app.running_recap_pids():
+        pytest.skip("o ReCap já está aberto nesta máquina; o teste não interfere em sessões do usuário")
     src = work / "gui.pts"
     grid_pts(src, n=20)
     st = run(manager, caps, [src], work / "gui", "gui")

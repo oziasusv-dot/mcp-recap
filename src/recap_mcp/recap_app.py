@@ -52,10 +52,37 @@ def scan_log_for_load(log: Path, offset: int, project: Path) -> str | None:
     return None
 
 
+def running_recap_pids() -> list[int]:
+    """PIDs de ReCap.exe em execução (somente leitura, via tasklist)."""
+    if os.name != "nt":
+        return []
+    try:
+        out = subprocess.run(["tasklist", "/FI", "IMAGENAME eq ReCap.exe", "/FO", "CSV", "/NH"],
+                             capture_output=True, text=True, timeout=30, check=False,
+                             creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0)).stdout
+    except (OSError, subprocess.TimeoutExpired):
+        return []
+    pids = []
+    for line in out.splitlines():
+        parts = [p.strip('"') for p in line.split('","')]
+        if len(parts) > 1 and parts[0].lower() == "recap.exe" and parts[1].isdigit():
+            pids.append(int(parts[1]))
+    return pids
+
+
 def open_project(recap_exe: str, project: Path, wait_for_load_seconds: int = 0,
-                 sleep=time.sleep, popen=subprocess.Popen) -> dict[str, Any]:
+                 sleep=time.sleep, popen=subprocess.Popen, allow_second_instance: bool = False,
+                 running=None) -> dict[str, Any]:
     if not (0 <= wait_for_load_seconds <= MAX_WAIT_S):
         raise errors.RecapMcpError(errors.INVALID_ARGUMENT, f"wait_for_load_seconds deve estar entre 0 e {MAX_WAIT_S}.")
+    already = (running or running_recap_pids)()
+    if already and not allow_second_instance:
+        # Observado no ReCap 27.0.1.242: com outra instância aberta, a nova não carregou o projeto em 240 s.
+        raise errors.RecapMcpError(
+            errors.RECAP_ALREADY_RUNNING,
+            "O ReCap já está aberto. Abra o projeto pelo menu do ReCap aberto, ou feche-o e chame de novo. "
+            "Para iniciar mesmo assim uma segunda instância, use allow_second_instance=true.",
+            running_pids=already)
     log = recap_log_path()
     offset = log.stat().st_size if log and log.is_file() else 0
     try:

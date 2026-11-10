@@ -6,6 +6,8 @@ import pytest
 
 from recap_mcp import errors, recap_app
 
+ORIGINAL_RUNNING_PIDS = recap_app.running_recap_pids
+
 
 class FakeProc:
     def __init__(self, code=None):
@@ -14,6 +16,39 @@ class FakeProc:
 
     def poll(self):
         return self.returncode
+
+
+@pytest.fixture(autouse=True)
+def no_running_recap(monkeypatch):
+    monkeypatch.setattr(recap_app, "running_recap_pids", list)
+
+
+def test_refuses_when_recap_already_running(tmp_path, monkeypatch):
+    monkeypatch.setattr(recap_app, "running_recap_pids", lambda: [999])
+    called = []
+    with pytest.raises(errors.RecapMcpError) as ei:
+        recap_app.open_project("ReCap.exe", tmp_path / "p.rcp", popen=lambda *a, **k: called.append(1))
+    assert ei.value.code == errors.RECAP_ALREADY_RUNNING
+    assert ei.value.details["running_pids"] == [999] and not called
+    res = recap_app.open_project("ReCap.exe", tmp_path / "p.rcp", allow_second_instance=True,
+                                 popen=lambda *a, **k: FakeProc())
+    assert res["ok"]
+
+
+def test_running_recap_pids_reads_tasklist(monkeypatch):
+    class Out:
+        stdout = '"ReCap.exe","38748","Console","1","500.000 K"\r\n"INFO: nenhuma tarefa","x"\r\n'
+
+    seen = {}
+
+    def run(cmd, **kw):
+        seen["cmd"] = cmd
+        return Out()
+
+    monkeypatch.setattr(recap_app.os, "name", "nt")
+    monkeypatch.setattr(recap_app.subprocess, "run", run)
+    assert ORIGINAL_RUNNING_PIDS() == [38748]
+    assert seen["cmd"][0] == "tasklist"
 
 
 @pytest.fixture

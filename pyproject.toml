@@ -11,6 +11,7 @@ dependencies = [
 
 [project.scripts]
 mcp-recap = "recap_mcp.__main__:main"
+mcp-recap-configurar = "recap_mcp.client_config:main"
 
 [build-system]
 requires = ["hatchling>=1.25"]

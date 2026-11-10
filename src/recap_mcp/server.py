@@ -208,8 +208,8 @@ def build_server(ctx: Context | None = None) -> tuple[FastMCP, Context]:
         output_folder: Annotated[str, Field(description="Pasta de destino (absoluta). Criada se não existir.")],
         project_name: Annotated[str, Field(description="Nome do novo projeto, sem extensão.")],
         decimation_mm: Annotated[float | None, Field(description="--decimation: distância mínima entre pontos, em mm.")] = None,
-        min_range_m: Annotated[int | None, Field(description="--minRangeClipping: distância mínima ao scanner (inteiro).")] = None,
-        max_range_m: Annotated[int | None, Field(description="--maxRangeClipping: distância máxima ao scanner (inteiro).")] = None,
+        min_range_m: Annotated[float | None, Field(description="--minRangeClipping: distância mínima ao scanner; inteiro (unidade não documentada pela Autodesk, presumivelmente metros).")] = None,
+        max_range_m: Annotated[float | None, Field(description="--maxRangeClipping: distância máxima ao scanner; inteiro (unidade não documentada pela Autodesk, presumivelmente metros).")] = None,
         unify: Annotated[bool, Field(description="--unify: unifica os scans em um só.")] = False,
         normalize_intensity: Annotated[bool | None, Field(description="--normalizeIntensity 0|1.")] = None,
         input_unit: Annotated[str | None, Field(description="--inputUnitType: mm, cm, m, in, ft ou us_ft.")] = None,
@@ -269,6 +269,8 @@ def build_server(ctx: Context | None = None) -> tuple[FastMCP, Context]:
         path: Annotated[str, Field(description="Caminho absoluto de um .rcp existente.")],
         wait_for_load_seconds: Annotated[int, Field(ge=0, le=300, description=(
             "Se > 0, aguarda até este tempo pelo registro de carregamento no log do ReCap."))] = 0,
+        allow_second_instance: Annotated[bool, Field(description=(
+            "Inicia outra instância mesmo com o ReCap já aberto (nos testes, ela não carregou o projeto)."))] = False,
     ) -> dict[str, Any]:
         """Abre um projeto .rcp existente na interface do ReCap (chamada explícita). Não altera o arquivo."""
         p = existing_file(path, "path")
@@ -278,7 +280,8 @@ def build_server(ctx: Context | None = None) -> tuple[FastMCP, Context]:
         inst = ctx.install()
         if not inst.recap_exe:
             raise errors.RecapMcpError(errors.RECAP_NOT_FOUND, "ReCap.exe não encontrado.")
-        return recap_app.open_project(inst.recap_exe, p, wait_for_load_seconds=wait_for_load_seconds)
+        return recap_app.open_project(inst.recap_exe, p, wait_for_load_seconds=wait_for_load_seconds,
+                                      allow_second_instance=allow_second_instance)
 
     return mcp, ctx
 
